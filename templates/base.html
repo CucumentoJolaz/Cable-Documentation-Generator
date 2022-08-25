@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    {% load static %}
+    <title>{% block title %}{% endblock %}</title>
+</head>
+<body>
+<div id="app">
+    {% block content %}
+    {% endblock %}
+</div>
+
+</body>
+<script type="text/javascript" src="{% static "generator/js/cascading_dd.js" %}"></script>
+<script type="text/javascript" src="{% static "generator/js/table_creation.js" %}"></script>
+</html>

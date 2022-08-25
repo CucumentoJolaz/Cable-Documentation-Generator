@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}
+    Генератор документации кабелей
+{% endblock %}
+
+{% block content %}
+    <div>
+        <table>
+            <tbody>
+            <tr>
+                <td>Марка кабеля</td>
+                <td>Система скрутки</td>
+                <td>Длина кабеля [км]</td>
+            </tr>
+            <tr>
+                <td>
+                    <select name="cable_type" id="cable_type">
+                        <option value="" selected="selected">Выберите Марку Кабеля</option>
+                    </select>
+                </td>
+                <td>
+                    <select name="cabling_scheme" id="cabling_scheme">
+                        <option value="" selected="selected">Выберите Схему Скрутки</option>
+                    </select>
+                </td>
+                <td>
+                    <input type="text" id="cable_length" name="cable_length" onkeypress="return onlyNumbers(event)">
+                </td>
+                <td>
+                    <input type="button" onclick="createTable()" value="Добавить">
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <form method="POST"
+          name="cable_documentation_form"
+          enctype=multipart/form-data
+          action="{% url 'generate_cable_documentation' %}">
+        {% csrf_token %}
+        <input type="submit" value="Рассчитать">
+        <table id="myTable" border="1">
+            <tr>
+                <td><input name="type_1" value="МПсЭфКВЭфнг(А)-FRLS" readonly></td>
+                <td><input name="scheme_1" value="5х(2х1,0)" readonly></td>
+                <td><input name="length_1" value="2.4" readonly></td>
+            </tr>
+            <tr>
+                <td><input name="type_2" value="МВВнг(А)-LS" readonly></td>
+                <td><input name="scheme_2" value="10х0,5" readonly></td>
+                <td><input name="length_2" value="2.4" readonly></td>
+            </tr>
+        </table>
+    </form>
+{% endblock %}
