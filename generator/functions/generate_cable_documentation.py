@@ -35,6 +35,19 @@ def get_cable_parameters(post_form: Dict) -> List[Dict]:
     return cable_parameter_list
 
 
+def check_or_create_folder(folder_path: str) -> bool:
+    """
+    Checking if folder exists and create it if not.
+    If folder exists - return True, if folder created - return False.
+    :return:
+    """
+    if not os.path.exists(folder_path):
+        os.makedirs(folder_path)
+        return False
+    else:
+        return True
+
+
 def copy_xlsm_to_buffer() -> str:
     """
     Copying macro file to buffer workfolder.
@@ -45,10 +58,14 @@ def copy_xlsm_to_buffer() -> str:
 
     folder_name = f"{datetime.datetime.now().strftime('%m.%d.%Y %H.%M.%S')}"
     macro_work_folder = str_base_dir + "/media/buffer/" + folder_name
+    check_or_create_folder(str_base_dir + "/media/buffer")
     os.mkdir(macro_work_folder)
     shutil.copy2(macro_file_name, f"{macro_work_folder}/cost_calc.xlsm")
     return f"{macro_work_folder}/cost_calc.xlsm"
 
+def get_folder_path(full_path) -> Tuple[str, str]:
+    """ Get full path to file and return  folder path and filename"""
+    return "/".join(full_path.split("/")[:-1]), full_path.split("/")[-1]
 
 def run_macros_calculations(xlsm_path, cable_parameter_list) -> None:
     """
@@ -71,12 +88,10 @@ def run_macros_calculations(xlsm_path, cable_parameter_list) -> None:
             run_macro = wb.app.macro("Module1.Cblcalc")
             run_macro()
         except pywintypes.com_error:
-            pass  # bruh
+            pass  # bruh. Macros executes anyway. But django server continue to work. And this error do not lay it down
 
 
-def get_folder_path(full_path) -> Tuple[str, str]:
-    """ Get full path to file and return  folder path and filename"""
-    return "/".join(full_path.split("/")[:-1]), full_path.split("/")[-1]
+
 
 
 def archive_and_delete(buffer_folder_path: str) -> Tuple[str, str]:
@@ -84,6 +99,9 @@ def archive_and_delete(buffer_folder_path: str) -> Tuple[str, str]:
     Create archive from folder and delete folder
     :return:
     """
+    str_base_dir = str(BASE_DIR)
+    check_or_create_folder(str_base_dir + "/media/buffer")
+
     shutil.make_archive(base_name=buffer_folder_path,
                         format='zip',
                         root_dir=buffer_folder_path)
@@ -107,6 +125,7 @@ def run_documentation_calculation(cable_parameter_list: List[Dict]) -> str:
     buffer_folder_path, filename = get_folder_path(xlsm_path)
 
     return buffer_folder_path
+
 
 def serve_archived_documentation(archive_path: str) -> HttpResponse:
     """
