@@ -9,7 +9,7 @@ var n=0 //counter
 
 if (cable=="") {
    alert("Введите марку кабеля");
-   n=n=1
+   n=n+1
 }
 if (scheme=="") {
    alert("Укажите схему скрутки");
@@ -20,17 +20,38 @@ if (cbl_length=="") {
    n=n+1
 }
 
+//number of inserted row calculation
+var rows_number=document.getElementById("myTable").rows.length+1;
+
 //if there is no alerts then add row (n>0)
 
+
+
 if (n==0) {
-   var x=document.getElementById('myTable').insertRow(0);
+   var x=document.getElementById('myTable').insertRow(-1);
    var y=  x.insertCell(0);
-   y.innerHTML=cable; 
+   var z1=document.createElement("input");
+   z1.setAttribute("name", "type" + "_" + rows_number);
+   z1.setAttribute("value", cable);
+   z1.setAttribute("readonly",true);
+   y.appendChild(z1);
+   //y.innerHTML=cable; 
    y=x.insertCell(1);
-   y.innerHTML=scheme;
+   var z2=document.createElement("input");
+   z2.setAttribute("name", "scheme" + "_" + rows_number);
+   z2.setAttribute("value", scheme);
+   z2.setAttribute("readonly",true);
+   y.appendChild(z2);
+   //y.innerHTML=scheme;
    y=x.insertCell(2);
-   y.innerHTML=cbl_length;
+   var z3=document.createElement("input");
+   z3.setAttribute("name", "length" + "_" + rows_number);
+   z3.setAttribute("value", cbl_length);
+   z3.setAttribute("readonly",true);
+   y.appendChild(z3);
+   //y.innerHTML=cbl_length;
 }
+
 }
 
 function onlyNumbers(e) {
